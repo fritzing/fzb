@@ -5,8 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"path/filepath"
 	// "os"
+	"path/filepath"
+)
+
+const (
+	MinimumInstances = 4
 )
 
 // the fritzing fzb format go utility
@@ -50,12 +54,12 @@ func ReadFile(src string) (Fzb, error) {
 	return fzbData, err
 }
 
-type FzbDir map[string]Fzb
-
-func ReadDir() FzbDir {
-	store := FzbDir{}
-	return store
-}
+// type FzbDir map[string]Fzb
+//
+// func ReadDir() FzbDir {
+// 	store := FzbDir{}
+// 	return store
+// }
 
 func UnmarshalXML(src []byte) (Fzb, error) {
 	f := Fzb{}
@@ -63,7 +67,8 @@ func UnmarshalXML(src []byte) (Fzb, error) {
 	return f, err
 }
 
-func (f *Fzb) MarshalXML() ([]byte, error) {
+// MarshalXML return the marshaled data as byte array
+func (f *Fzb) ParseXML() ([]byte, error) {
 	b, err := xml.MarshalIndent(f, "", "  ")
 	return b, err
 }
@@ -72,24 +77,37 @@ func (f *Fzb) TotalInstances() int {
 	return len(f.Instances)
 }
 
-func (f *Fzb) Validate() (error, string) {
+func (f *Fzb) Validate(basepath string) (error, string) {
 	errMsg := ""
 	warnMsg := ""
 	if f.Title == "" {
-		errMsg = "ERROR > Missing Title\n"
+		errMsg += "ERROR > Missing Title\n"
 	}
 	if f.FritzingVersion == "" {
-		warnMsg = "WARN  >  Missing FritzingVersion\n"
+		warnMsg += "WARN  > Missing FritzingVersion\n"
 	}
 
+	// check if icon exist...
+	if f.Icon == "" {
+		warnMsg += "WARN  > Missing Icon Path\n"
+	}
+	// check fi file exist / is file readable...
+	tmpPath := filepath.Join(basepath, f.Icon)
+	_, err := ioutil.ReadFile(tmpPath)
+	if err != nil {
+		errMsg += fmt.Sprintf("ERROR > Icon File %q - %s\n", f.Icon, err)
+	}
+	// fmt.Println("icon exist", tmpPath)
+
 	tmptotal := f.TotalInstances()
-	if tmptotal < 16 {
-		errMsg += fmt.Sprintf("ERROR > Minimum number of Instances must be 16! current %v\n", tmptotal)
+	if tmptotal < MinimumInstances {
+		errMsg += fmt.Sprintf("ERROR > Minimum number of Instances must be 4! current %v\n", tmptotal)
 	}
 
 	// for _, v := range f.Instances {
 	// 	v.Validate()
 	// }
+
 	if errMsg != "" {
 		return errors.New(errMsg), warnMsg
 	}
@@ -97,7 +115,7 @@ func (f *Fzb) Validate() (error, string) {
 }
 
 // ValidateFile validate a .fzb file and print result to stdout
-func ValidateFile(src string) string {
+func ValidateFile(basepath, src string) string {
 	tmpReport := ""
 
 	// check if file is a fzb
@@ -109,9 +127,9 @@ func ValidateFile(src string) string {
 		}
 
 		// fmt.Println("Validate Data...")
-		err, warn := fzbData.Validate()
+		err, warn := fzbData.Validate(basepath)
 		if warn == "" && err == nil {
-			return fmt.Sprintf("OK    @ %q - file is valid\n\n", src)
+			return fmt.Sprintf("OK    @ %q \t file is valid\n\n", src)
 		}
 
 		if warn != "" || err != nil {
@@ -144,7 +162,7 @@ func ValidateDir(src string) string {
 	for _, v := range d {
 		tmpfilepath := src + "/" + v.Name()
 		// fmt.Println("tmpfilepath", tmpfilepath)
-		tmpReport += ValidateFile(tmpfilepath)
+		tmpReport += ValidateFile(src, tmpfilepath)
 		// err, _ =
 		// if err != nil {
 		// 	fmt.Println("\n", v.Name())

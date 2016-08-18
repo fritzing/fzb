@@ -25,7 +25,7 @@ func main() {
 	fmt.Println("fzb validate", version)
 	if *flagFile != "" {
 		debug.Println("Read Fzb", *flagFile)
-		report := fzb.ValidateFile(*flagFile)
+		report := fzb.ValidateFile(os.Args[0], *flagFile)
 		fmt.Println(report)
 	}
 
