@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"os"
+	// "os"
 	"path/filepath"
 )
 
@@ -126,7 +126,7 @@ func ValidateFile(basepath, src string) string {
 		// fmt.Println("Validate Data...")
 		err, warn := fzbData.Validate(basepath)
 		if warn == "" && err == nil {
-			return fmt.Sprintf("OK    @ %q \t file is valid\n\n", src)
+			return ""
 		}
 
 		if warn != "" || err != nil {
@@ -167,8 +167,5 @@ func ValidateDir(src string) string {
 		// }
 	}
 
-	if tmpReport != "" {
-		os.Exit(1)
-	}
 	return tmpReport
 }

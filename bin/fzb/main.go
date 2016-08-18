@@ -27,16 +27,24 @@ func main() {
 
 	debug := verbose.New(os.Stdout, *flagVerbose)
 
+	report := ""
+
 	fmt.Println("fzb validate", version)
 	if *flagFile != "" {
 		debug.Println("Read Fzb", *flagFile)
-		report := fzb.ValidateFile(os.Args[0], *flagFile)
+		report = fzb.ValidateFile(os.Args[0], *flagFile)
 		fmt.Println(report)
 	}
 
 	if *flagDir != "" {
 		debug.Println("Read Folder", *flagDir)
-		report := fzb.ValidateDir(*flagDir)
+		report = fzb.ValidateDir(*flagDir)
 		fmt.Println(report)
 	}
+
+	if report != "" {
+		os.Exit(1)
+	}
+
+	fmt.Println("Fzb Data valid")
 }
