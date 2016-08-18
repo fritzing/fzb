@@ -18,7 +18,12 @@ func main() {
 	flagFile := flag.String("f", "", "validate a file")
 	flagDir := flag.String("d", "", "validate a directory")
 	flagVerbose := flag.Bool("v", false, "verbose mode")
+	flagVersion := flag.Bool("version", false, "print version and exit")
 	flag.Parse()
+	if *flagVersion {
+		fmt.Println(version)
+		os.Exit(0)
+	}
 
 	debug := verbose.New(os.Stdout, *flagVerbose)
 

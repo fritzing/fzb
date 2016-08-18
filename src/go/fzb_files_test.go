@@ -53,11 +53,11 @@ func Test_Fzb_ReadFile_Failed(t *testing.T) {
 
 		tmpfzb, err := ReadFile(tt.src)
 		if err != nil {
-			t.Error("ReadFile missing Error")
+			t.Error("Missing fixture", err)
 		}
 		err, warn := tmpfzb.Validate("../fixture")
-		if err != nil {
-			t.Error(err)
+		if err == nil {
+			t.Error("ReadFile missing Error")
 		}
 		t.Log(warn)
 	}
