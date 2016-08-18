@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	// "os"
+	"os"
 	"path/filepath"
 )
 
@@ -165,6 +165,10 @@ func ValidateDir(src string) string {
 		// 	fmt.Println("\n", v.Name())
 		// 	fmt.Println(err)
 		// }
+	}
+
+	if tmpReport != "" {
+		os.Exit(1)
 	}
 	return tmpReport
 }
