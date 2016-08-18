@@ -18,6 +18,10 @@ func (i *Instance) PrettyPrint() {
 	i.IconView.PrettyPrint()
 }
 
+func (i *Instance) Check() {
+	fmt.Println("check instance", i)
+}
+
 type View struct {
 	Layer string `xml:"layer,attr"`
 	Geometry
