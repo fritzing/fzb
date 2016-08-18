@@ -17,3 +17,6 @@ this tool is part of the `fritzing-parts` continous integration test environment
  - [ ] format
  - [ ] get
  - [ ] create
+
+## Implementation
+this validator is written in `go`.  [![GoDoc](https://godoc.org/github.com/fritzing/fzb/src/go?status.svg)](http://godoc.org/github.com/fritzing/fzb/src/go)
