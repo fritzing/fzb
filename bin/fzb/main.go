@@ -4,18 +4,35 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/paulvollmer/fzb/src/go"
 	"os"
 )
 
 func main() {
-	fmt.Println("fzb")
+	flagFile := flag.String("f", "", "the file")
+	flag.Parse()
 
-	fzbData, err := fzb.ReadFile(os.Args[1])
+	// fmt.Println("Read Fzb", *flagFile)
+	fzbData, err := fzb.ReadFile(*flagFile)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fzbData.PrettyPrint()
+
+	// fmt.Println("Check Data...")
+	err, warn := fzbData.Check()
+	if warn == "" && err == nil {
+		fmt.Println(*flagFile, "is valid")
+	}
+
+	if warn != "" {
+		fmt.Print(warn)
+	}
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	// fzbData.PrettyPrint()
 }

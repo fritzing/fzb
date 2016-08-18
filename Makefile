@@ -11,4 +11,5 @@ test-bin:
 	@echo "build the commandline tool"
 	@cd bin/fzb && go build
 	@echo "run the cli..."
-	./bin/fzb/fzb src/fixture/test16.fzb
+	#./bin/fzb/fzb -h
+	./bin/fzb/fzb -f src/fixture/test1.fzb

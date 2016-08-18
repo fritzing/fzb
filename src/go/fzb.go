@@ -31,7 +31,6 @@ func ReadFile(src string) (Fzb, error) {
 	if err != nil {
 		return fzbData, err
 	}
-	err = fzbData.Check()
 	return fzbData, err
 }
 
@@ -50,14 +49,27 @@ func (f *Fzb) TotalInstances() int {
 	return len(f.Instances)
 }
 
-func (f *Fzb) Check() error {
+func (f *Fzb) Check() (error, string) {
+	errMsg := ""
+	warnMsg := ""
+	if f.Title == "" {
+		errMsg = "ERROR> Missing Title\n"
+	}
+	if f.FritzingVersion == "" {
+		warnMsg = "WARN>  Missing FritzingVersion\n"
+	}
+
 	if f.TotalInstances() < 16 {
-		return errors.New("Minimum number of Instances must be 16")
+		errMsg += "ERROR> Minimum number of Instances must be 16!\n"
 	}
-	for _, v := range f.Instances {
-		v.Check()
+
+	// for _, v := range f.Instances {
+	// 	v.Check()
+	// }
+	if errMsg != "" {
+		return errors.New(errMsg), warnMsg
 	}
-	return nil
+	return nil, warnMsg
 }
 
 func (f *Fzb) PrettyPrint() {

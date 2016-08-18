@@ -1,6 +1,7 @@
 package fzb
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -18,13 +19,22 @@ func (i *Instance) PrettyPrint() {
 	i.IconView.PrettyPrint()
 }
 
-func (i *Instance) Check() {
+func (i *Instance) Check() error {
 	fmt.Println("check instance", i)
+	if i.IconView.Layer != "icon" {
+		return errors.New("IconView not valid. must be 'icon'")
+	}
+
+	if i.ModuleRef == "" {
+		return errors.New("IconView ModuleRef not set")
+	}
+
+	return nil
 }
 
 type View struct {
-	Layer string `xml:"layer,attr"`
-	Geometry
+	Layer    string `xml:"layer,attr"`
+	Geometry `xml:"geometry"`
 }
 
 func (v *View) PrettyPrint() {
