@@ -1,1 +1,4 @@
+*.DS_Store
+*cover.html
+*cover.out
 bin/fzb/fzb

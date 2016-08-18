@@ -16,3 +16,8 @@ test-bin:
 
 install:
 	cd bin/fzb && go install
+
+cover:
+	cd src/go && go test -coverprofile cover.out
+	cd src/go && go tool cover -html=cover.out -o cover.html
+
