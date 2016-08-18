@@ -5,8 +5,11 @@ import (
 	"fmt"
 	"github.com/paulvollmer/fzb/src/go"
 	"github.com/paulvollmer/go-verbose"
-	"io/ioutil"
 	"os"
+)
+
+const (
+	version = "0.1.0"
 )
 
 // fzb commandline tool
@@ -19,57 +22,16 @@ func main() {
 
 	debug := verbose.New(os.Stdout, *flagVerbose)
 
+	fmt.Println("fzb validate", version)
 	if *flagFile != "" {
 		debug.Println("Read Fzb", *flagFile)
-		processFile(*flagFile)
+		report := fzb.ValidateFile(*flagFile)
+		fmt.Println(report)
 	}
 
 	if *flagDir != "" {
 		debug.Println("Read Folder", *flagDir)
-		processDir(*flagDir)
+		report := fzb.ValidateDir(*flagDir)
+		fmt.Println(report)
 	}
-
-}
-func processDir(src string) error {
-
-	d, err := ioutil.ReadDir(src)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	totalFiles := len(d)
-	fmt.Println("total files", totalFiles)
-	for _, v := range d {
-		tmpfilepath := src + "/" + v.Name()
-		// fmt.Println("tmpfilepath", tmpfilepath)
-		err := processFile(tmpfilepath)
-		if err != nil {
-			fmt.Println("\n", v.Name())
-			fmt.Println(err)
-		}
-	}
-	return err
-}
-
-func processFile(src string) error {
-	fzbData, err := fzb.ReadFile(src)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	// fmt.Println("Check Data...")
-	err, warn := fzbData.Check()
-	if warn == "" && err == nil {
-		fmt.Println(src, "is valid")
-		return nil
-	}
-
-	if warn != "" {
-		fmt.Print(warn)
-	}
-	if err != nil {
-		fmt.Print(err)
-	}
-	return err
 }
