@@ -1,4 +1,4 @@
-# fzb
+# fzb [![Build Status](https://travis-ci.org/fritzing/fzb.svg?branch=master)](https://travis-ci.org/fritzing/fzb)
 
 this tool is part of the `fritzing-parts` continous integration test environment.
 
