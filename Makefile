@@ -13,3 +13,6 @@ test-bin:
 	@echo "run the cli..."
 	./bin/fzb/fzb -version
 	# ./bin/fzb/fzb -f src/fixture/test16.fzb
+
+install:
+	cd bin/fzb && go install

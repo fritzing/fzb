@@ -19,7 +19,7 @@ func (i *Instance) PrettyPrint() {
 	i.IconView.PrettyPrint()
 }
 
-func (i *Instance) Check() error {
+func (i *Instance) Validate() error {
 	fmt.Println("check instance", i)
 	if i.IconView.Layer != "icon" {
 		return errors.New("IconView not valid. must be 'icon'")

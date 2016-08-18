@@ -44,7 +44,9 @@ var TestDataFailed = []struct {
 	// {"../fixture/test-empty.fzb"},
 	{"../fixture/test-module-empty.fzb"},
 	{"../fixture/test-title.fzb"},
+	{"../fixture/test-icon-not-png.fzb"},
 	{"../fixture/test1.fzb"},
+	{"../fixture/test16-broken.fzb"},
 }
 
 func Test_Fzb_ReadFile_Failed(t *testing.T) {

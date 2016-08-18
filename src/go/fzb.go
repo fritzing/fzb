@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	// "os"
 	"path/filepath"
+	"strings"
 )
 
 const (
@@ -88,6 +89,17 @@ func (f *Fzb) Validate(basepath string) (error, string) {
 	if f.Icon == "" {
 		warnMsg += "WARN  > Missing Icon Path\n"
 	}
+
+	// check if icon is lowercase
+	if f.Icon != strings.ToLower(f.Icon) {
+		warnMsg += fmt.Sprintf("WARN  > Icon Filename is not lowercase. %s\n", f.Icon)
+	}
+
+	iconExt := filepath.Ext(f.Icon)
+	if iconExt != ".png" {
+		warnMsg += fmt.Sprintf("WARN  > Icon Extension not '.png' - %s\n", iconExt)
+	}
+
 	// check fi file exist / is file readable...
 	tmpPath := filepath.Join(basepath, f.Icon)
 	_, err := ioutil.ReadFile(tmpPath)
@@ -101,8 +113,23 @@ func (f *Fzb) Validate(basepath string) (error, string) {
 		errMsg += fmt.Sprintf("ERROR > Minimum number of Instances must be 4! current %v\n", tmptotal)
 	}
 
+	// check if a instance file exist
 	// for _, v := range f.Instances {
-	// 	v.Validate()
+	// fmt.Println("PATH", v.Path)
+	// if v.Path != "" {
+	// 	instancePathExt := filepath.Ext(v.Path)
+	// 	// fmt.Println("instancePathExt", instancePathExt)
+	// 	if instancePathExt == "" {
+	// 		errMsg += "WARN  > Instance Path has no .fzp extension - " + v.Path + "\n"
+	// 	} else if instancePathExt != ".fzp" {
+	// 		errMsg += "WARN  > Instance Path is not a .fzp file. " + v.Path + "\n"
+	// 	} else if instancePathExt == ".fzp" {
+	// 		_, err := ioutil.ReadFile(v.Path)
+	// 		if err != nil {
+	// 			errMsg += "ERROR> file not found " + v.Path + "\n"
+	// 		}
+	// 	}
+	// }
 	// }
 
 	if errMsg != "" {
@@ -120,7 +147,7 @@ func ValidateFile(basepath, src string) string {
 
 		fzbData, err := ReadFile(src)
 		if err != nil {
-			return fmt.Sprintf("ERROR @ %q Read File: %s\n", src, err)
+			return fmt.Sprintf("ERROR> %q Read File: %s\n", src, err)
 		}
 
 		// fmt.Println("Validate Data...")
@@ -130,13 +157,13 @@ func ValidateFile(basepath, src string) string {
 		}
 
 		if warn != "" || err != nil {
-			tmpReport = fmt.Sprintf("ERROR @ %q\n", src)
+			tmpReport = fmt.Sprintf("\n===== @ %q\n", src)
 		}
 		if warn != "" {
 			tmpReport += warn
 		}
 		if err != nil {
-			tmpReport += err.Error() + "\n"
+			tmpReport += err.Error()
 		}
 
 	}
@@ -151,9 +178,9 @@ func ValidateDir(src string) string {
 		return err.Error()
 	}
 
-	totalFiles := len(d)
-	fmt.Println("Total Files", totalFiles)
-	fmt.Println("Start Validating files...")
+	// totalFiles := len(d)
+	// fmt.Println("Total Files", totalFiles)
+	// fmt.Println("Start Validating files...")
 
 	tmpReport := ""
 	for _, v := range d {
