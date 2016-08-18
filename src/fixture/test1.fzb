@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module fritzingVersion="0.4.3b.0.0" icon="Core.png">
+
+	<title>Test Parts</title>
+
+  <instances>
+
+    <instance moduleIdRef="__spacer__" modelIndex="3" path="Basic">
+      <views>
+
+        <iconView layer="icon">
+          <geometry z="-1" x="-1" y="-1"></geometry>
+        </iconView>
+
+      </views>
+    </instance>
+
+  </instances>
+
+</module>
