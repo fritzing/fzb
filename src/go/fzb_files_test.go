@@ -41,7 +41,7 @@ func Test_Fzb_ReadFile_Passed(t *testing.T) {
 var TestDataFailed = []struct {
 	src string
 }{
-	{"../fixture/test-empty.fzb"},
+	// {"../fixture/test-empty.fzb"},
 	{"../fixture/test-module-empty.fzb"},
 	{"../fixture/test-title.fzb"},
 	{"../fixture/test1.fzb"},
@@ -51,11 +51,14 @@ func Test_Fzb_ReadFile_Failed(t *testing.T) {
 	for ti, tt := range TestDataFailed {
 		t.Log("TEST ", ti, tt.src)
 
-		_, err := ReadFile(tt.src)
-		if err == nil {
+		tmpfzb, err := ReadFile(tt.src)
+		if err != nil {
 			t.Error("ReadFile missing Error")
 		}
-		t.Log(err)
-
+		err, warn := tmpfzb.Validate("../fixture")
+		if err != nil {
+			t.Error(err)
+		}
+		t.Log(warn)
 	}
 }

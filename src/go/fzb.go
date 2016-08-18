@@ -48,9 +48,6 @@ func ReadFile(src string) (Fzb, error) {
 		return Fzb{}, err
 	}
 	fzbData, err := UnmarshalXML(fzbBytes)
-	if err != nil {
-		return fzbData, err
-	}
 	return fzbData, err
 }
 
